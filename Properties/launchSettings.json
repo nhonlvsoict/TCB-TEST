@@ -29,8 +29,8 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
-      "publishAllPorts": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/appendorinsert",
+      "publishAllPorts": false,
       "useSSL": true
     }
   }

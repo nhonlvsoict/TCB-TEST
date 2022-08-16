@@ -24,29 +24,37 @@ namespace TCB_TEST.Domain.Services
         /// <returns type="bool"> true if appened, false if Inserted </returns>
         public async Task<bool> AppendOrInsert(Pool pool)
         {
-            var extPool =  await _poolRespository.GetPool(pool.Id);
-            List<Pool> poolLst = await GetPoolList();
-            if (extPool != null)
+            try
             {
-                // append thoi
-                poolLst = poolLst.FindAll(e => e.Id != extPool.Id);
-                extPool.Values.AddRange(pool.Values);
-                poolLst.Add(extPool);
-               
-                _poolRespository.SavePoolList(poolLst);
-               
-                return true;
 
-                
+
+                var extPool = await _poolRespository.GetPool(pool.Id);
+                List<Pool> poolLst = await GetPoolList();
+                if (extPool != null)
+                {
+                    // append thoi
+                    poolLst = poolLst.FindAll(e => e.Id != extPool.Id);
+                    extPool.Values.AddRange(pool.Values);
+                    poolLst.Add(extPool);
+
+                    _poolRespository.SavePoolList(poolLst);
+
+                    return true;
+
+
+                }
+                else
+                {
+                    //them moi pool
+                    poolLst.Add(pool);
+                    await _poolRespository.SavePoolList(poolLst);
+                    return false;
+                }
             }
-            else
+            catch (Exception e)
             {
-                //them moi pool
-                poolLst.Add(pool);
-                _poolRespository.SavePoolList(poolLst);
-                return false;
+                throw e;
             }
-            
         }
 
         public async Task<Pool> GetPool(int id)

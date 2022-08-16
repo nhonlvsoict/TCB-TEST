@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TCB_TEST.Domain.Repositories;
+using TCB_TEST.Domain.Services;
 
 namespace TCB_TEST
 {
@@ -26,6 +28,8 @@ namespace TCB_TEST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IPoolRepository, PoolRepository>();
+            services.AddScoped<IPoolService, PoolService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

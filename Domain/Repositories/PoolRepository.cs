@@ -11,7 +11,7 @@ namespace TCB_TEST.Domain.Repositories
 {
     public class PoolRepository : IPoolRepository
     {
-        readonly string dataPath = @".\data.json";
+        readonly string dataPath = @"data.json";
         public async Task<Pool> GetPool(int id)
         {
             List<Pool> poolLst = await GetPoolList();
@@ -21,31 +21,44 @@ namespace TCB_TEST.Domain.Repositories
 
         public async Task<List<Pool>> GetPoolList()
         {
-            //todo lam cache o day
-
-            if (File.Exists(dataPath))
+            try
             {
-                // read JSON directly from a file
-                using StreamReader file = File.OpenText(dataPath);
-                using JsonTextReader reader = new JsonTextReader(file);
+                //todo lam cache o day
 
-                var o2 = JToken.ReadFrom(reader).ToObject<List<Pool>>();
-                return o2;
+                if (File.Exists(dataPath))
+                {
+                    // read JSON directly from a file
+                    using StreamReader file = File.OpenText(dataPath);
+                    using JsonTextReader reader = new JsonTextReader(file);
+
+                    var o2 = JToken.ReadFrom(reader).ToObject<List<Pool>>();
+                    return o2;
+                }
+                return new List<Pool>();
             }
-            return new List<Pool>();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public async Task<bool> SavePoolList(IEnumerable<Pool> pLst)
         {
-            /*var data = JArray.FromObject(pLst.Select(a => new Pool { Id = a.Id, Values = a.Values }));*/
-            JArray data = JArray.FromObject(pLst);
-            // write JSON directly to a file
-            using (StreamWriter file = File.CreateText(dataPath))
-            using (JsonTextWriter writer = new JsonTextWriter(file))
+            try
             {
-                data.WriteTo(writer);
+                /*var data = JArray.FromObject(pLst.Select(a => new Pool { Id = a.Id, Values = a.Values }));*/
+                JArray data = JArray.FromObject(pLst);
+                // write JSON directly to a file
+                using (StreamWriter file = File.CreateText(dataPath))
+                using (JsonTextWriter writer = new JsonTextWriter(file))
+                {
+                    data.WriteTo(writer);
+                }
+                return true;
+            } catch(Exception e)
+            {
+                throw e;
             }
-            return true;
         }
 
     

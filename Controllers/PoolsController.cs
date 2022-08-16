@@ -19,7 +19,12 @@ namespace TCB_TEST.Controllers
     {
         private readonly IPoolService _poolService;
         public PoolsController(IPoolService poolService) => _poolService = poolService;
-        // POST api/<PoolsController>
+        
+        /// <summary>
+        /// Append value or insert new pool to DB
+        /// </summary>
+        /// <param name="pool"></param>
+        /// <returns>Stautus appended or inserted</returns>
         [HttpPost("appendorinsert")]
         public async Task<IActionResult> AppendOrInsert(Pool pool)
         {
@@ -34,16 +39,20 @@ namespace TCB_TEST.Controllers
             } catch(Exception e)
             {
                 /*Response.StatusCode = (int)HttpStatusCode.InternalServerError;*/
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
             
             
         }
+        /// <summary>
+        /// Query quantile value and the numbel of element in a pool
+        /// </summary>
+        /// <param name="poolQuantile"></param>
+        /// <returns></returns>
         [HttpPost("querypercentile")]
         public async Task<IActionResult> QueryPercentile(PoolQuantile poolQuantile)
         {
-            /*var poolLst=  await _poolService.GetPoolList();*/
-            /*)*/
+           
             try
             {
                 Pool pool = await _poolService.GetPool(poolQuantile.Id);
@@ -55,15 +64,14 @@ namespace TCB_TEST.Controllers
                 }
                 else
                 {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return StatusCode(500);
+                    return StatusCode(400, "Pool Id does not exist");
                 }
 
             }
             catch (Exception e)
             {
-                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                return StatusCode(500);
+                
+                return StatusCode(500, e.Message);
             }
 
 
